@@ -1,0 +1,23 @@
+version: '3'
+services:
+  gotty:
+    container_name: gotty-docker-web
+    build:
+      context: .
+      dockerfile: Dockerfile
+    #自定义镜像名称，如有harbor。
+    image: 192.168.3.88/library/gotty-docker:v1
+    ports:
+      - 8111:8111
+    restart: always
+    privileged: true
+    volumes:
+        # 映射docker文件，能访问docker容器
+      - /usr/bin/docker:/usr/bin/docker
+      - /var/run/docker.sock:/var/run/docker.sock
+        # 映射k8s认证文件，访问k8s集群
+      - /root/.kube:/root/.kube 
+      - /usr/bin/kubectl:/usr/local/bin/kubectl 
+        # 映射log.sh文件，修改访问规则
+      - ./log.sh:/app/log.sh
+
